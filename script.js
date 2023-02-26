@@ -59,26 +59,8 @@ const initSphere = function (){
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
 
-        const planeGeometry = new THREE.PlaneGeometry(800, 800, 20, 20);
-        const planeMaterial = new THREE.MeshLambertMaterial({
-            color: 0x6904ce,
-            side: THREE.DoubleSide,
-            wireframe: true
-        });
-        
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.rotation.x = -0.5 * Math.PI;
-        plane.position.set(0, 30, 0);
-        group.add(plane);
-        
-        const plane2 = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane2.rotation.x = -0.5 * Math.PI;
-        plane2.position.set(0, -30, 0);
-        group.add(plane2);
-
         const icosahedronGeometry = new THREE.IcosahedronGeometry(10, 4);
         const lambertMaterial = new THREE.MeshLambertMaterial({
-            color: 0xff00ee,
             wireframe: true
         });
 
