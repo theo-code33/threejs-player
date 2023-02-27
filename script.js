@@ -1,34 +1,43 @@
 const noise = new SimplexNoise();
 
+// divise a value
 function fractionate(val, minVal, maxVal) {
     return (val - minVal)/(maxVal - minVal);
 }
 
+// modulate a value
 function modulate(val, minVal, maxVal, outMin, outMax) {
     const fr = fractionate(val, minVal, maxVal);
     const delta = outMax - outMin;
     return outMin + (fr * delta);
 }
 
+// average of an array
 function avg(arr){
     const total = arr.reduce(function(sum, b) { return sum + b; });
     return (total / arr.length);
 }
 
+// max of an array
 function max(arr){
     return arr.reduce(function(a, b){ return Math.max(a, b); })
 }
 
+// Init sphere
 const initSphere = function (){
   
+    // get file, audio and label
     const file = document.querySelector("#thefile");
     const audio = document.querySelector("#audio");
     const fileLabel = document.querySelector("label.file");
     
+    // play audio on load
     document.onload = () => {
         audio.play();
         play();
     }
+
+    // change class on file change
     file.onchange = function(){
         fileLabel.classList.add('normal');
         audio.classList.add('active');
@@ -40,6 +49,7 @@ const initSphere = function (){
         play();
     }
   
+    // play audio
     function play() {
         const context = new AudioContext();
         const src = context.createMediaElementSource(audio);
