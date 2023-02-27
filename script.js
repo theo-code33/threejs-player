@@ -3,54 +3,75 @@ const noise = new SimplexNoise();
 
 // Fractionate a value between a range
 function fractionate(val, minVal, maxVal) {
-    return (val - minVal)/(maxVal - minVal);
+  return (val - minVal) / (maxVal - minVal);
 }
 
 // Modulate a value between a range
 function modulate(val, minVal, maxVal, outMin, outMax) {
-    const fr = fractionate(val, minVal, maxVal);
-    const delta = outMax - outMin;
-    return outMin + (fr * delta);
+  const fr = fractionate(val, minVal, maxVal);
+  const delta = outMax - outMin;
+  return outMin + fr * delta;
 }
 
-// Average of an array
-function avg(arr){
-    const total = arr.reduce(function(sum, b) { return sum + b; });
-    return (total / arr.length);
+// Average a value in an array
+function avg(arr) {
+  const total = arr.reduce(function (sum, b) {
+    return sum + b;
+  });
+  return total / arr.length;
 }
 
-// Max value of an array
-function max(arr){
-    return arr.reduce(function(a, b){ return Math.max(a, b); })
+// Get the max value in an array
+function max(arr) {
+  return arr.reduce(function (a, b) {
+    return Math.max(a, b);
+  });
 }
 
-// Init Sphere
-const initSphere = function (){
-  
-    // get audio html element
+// Init sphere
+const initSphere = function () {
+
+    // Get audio element
     const file = document.querySelector("#thefile");
     const audio = document.querySelector("#audio");
     const fileLabel = document.querySelector("label.file");
-    
-    // start audio on load
+
+    // Play audio on load
     document.onload = () => {
         audio.play();
         play();
-    }
+    };
 
-    // start audio on file change
-    file.onchange = function(){
-        fileLabel.classList.add('normal');
-        audio.classList.add('active');
+    // Play audio on file change
+    file.onchange = function () {
+        fileLabel.classList.add("normal");
+        audio.classList.add("active");
         const files = this.files;
-        
+
         audio.src = URL.createObjectURL(files[0]);
         audio.load();
         audio.play();
         play();
-    }
-  
-    // Play audio, create sphere and create scene
+
+        audio.addEventListener("onpause", function () {
+        document.body.style.backgroundColor = "rgb(0, 0, 0)";
+        console.log("pause");
+        });
+
+        audio.addEventListener("onplay", function () {
+        console.log("play");
+        setInterval(() => {
+            const randomColor = `rgb(${Math.floor(
+            Math.random() * 256
+            )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(
+            Math.random() * 256
+            )})`;
+            document.body.style.backgroundColor = randomColor;
+        }, 100);
+        });
+    };
+
+    // Init scene
     function play() {
         const context = new AudioContext();
         const src = context.createMediaElementSource(audio);
@@ -62,8 +83,13 @@ const initSphere = function (){
         const dataArray = new Uint8Array(bufferLength);
         const scene = new THREE.Scene();
         const group = new THREE.Group();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0,0,100);
+        const camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+        );
+        camera.position.set(0, 0, 100);
         camera.lookAt(scene.position);
         scene.add(camera);
 
@@ -72,7 +98,8 @@ const initSphere = function (){
 
         const icosahedronGeometry = new THREE.IcosahedronGeometry(10, 4);
         const lambertMaterial = new THREE.MeshLambertMaterial({
-            wireframe: true
+        color: "rgb(0, 0, 0)",
+        wireframe: true,
         });
 
         const ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial);
@@ -89,15 +116,9 @@ const initSphere = function (){
         spotLight.castShadow = true;
         scene.add(spotLight);
 
-        composer = new EffectComposer( renderer );
-        composer.addPass( new RenderPass( scene, camera ) );
-
-        glitchPass = new GlitchPass();
-        composer.addPass( glitchPass );
-        
         scene.add(group);
 
-        document.querySelector('#blob').appendChild(renderer.domElement);
+        document.querySelector("#blob").appendChild(renderer.domElement);
 
         render();
 
@@ -105,24 +126,30 @@ const initSphere = function (){
         function render() {
             analyser.getByteFrequencyData(dataArray);
 
-            const lowerHalfArray = dataArray.slice(0, (dataArray.length/2) - 1);
-            const upperHalfArray = dataArray.slice((dataArray.length/2) - 1, dataArray.length - 1);
+            const lowerHalfArray = dataArray.slice(0, dataArray.length / 2 - 1);
+            const upperHalfArray = dataArray.slice(
+                dataArray.length / 2 - 1,
+                dataArray.length - 1
+            );
 
             const lowerMax = max(lowerHalfArray);
             const upperAvg = avg(upperHalfArray);
 
             const lowerMaxFr = lowerMax / lowerHalfArray.length;
             const upperAvgFr = upperAvg / upperHalfArray.length;
-            
-            makeRoughBall(ball, modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8), modulate(upperAvgFr, 0, 1, 0, 4));
+
+            makeRoughBall(
+                ball,
+                modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8),
+                modulate(upperAvgFr, 0, 1, 0, 4)
+            );
 
             group.rotation.y += 0.005;
             renderer.render(scene, camera);
             requestAnimationFrame(render);
         }
 
-
-        // Create sphere
+        // Make sphere rough
         function makeRoughBall(mesh, bassFr, treFr) {
             mesh.geometry.vertices.forEach(function (vertex, i) {
                 const offset = mesh.geometry.parameters.radius;
@@ -130,21 +157,38 @@ const initSphere = function (){
                 const time = window.performance.now();
                 vertex.normalize();
                 const rf = 0.00001;
-                const distance = (offset + bassFr ) + noise.noise3D(vertex.x + time *rf*7, vertex.y +  time*rf*8, vertex.z + time*rf*9) * amp * treFr;
+                const distance =
+                offset +
+                bassFr +
+                noise.noise3D(
+                    vertex.x + time * rf * 7,
+                    vertex.y + time * rf * 8,
+                    vertex.z + time * rf * 9
+                ) *
+                    amp *
+                    treFr;
                 vertex.multiplyScalar(distance);
             });
             mesh.geometry.verticesNeedUpdate = true;
             mesh.geometry.normalsNeedUpdate = true;
             mesh.geometry.computeVertexNormals();
             mesh.geometry.computeFaceNormals();
+            setInterval(() => {
+                const randomColor = `rgb(${Math.floor(
+                Math.random() * 256
+                )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(
+                Math.random() * 256
+                )})`;
+                mesh.material.color.set(randomColor);
+            }, 2000);
         }
 
         audio.play();
-    };
-}
+    }
+};
 
 window.onload = initSphere();
 
-document.body.addEventListener('touchend', () => {
-    context.resume();
+document.body.addEventListener("touchend", () => {
+  context.resume();
 });

@@ -5,7 +5,7 @@ body {
   overflow: hidden;
   height: 100vh;
   width: 100vw;
-  background-color: rgb(54, 54, 54);
+  background-color: rgb(229, 229, 229);
   font-family: "Saira", sans-serif;
   position: relative;
 }
@@ -30,7 +30,6 @@ audio {
   transform: translate3d(-50%, 0, 0);
   width: 12%;
 }
-
 
 audio::-webkit-media-controls {
   background-color: #f2f2f2;
@@ -105,7 +104,7 @@ label.file {
   font-size: 1.25em;
   font-weight: 700;
   background-color: #989898;
-  transition: .3s ease-in-out all;
+  transition: 0.3s ease-in-out all;
   cursor: pointer;
 }
 
