@@ -1,15 +1,19 @@
+// Create noise
 const noise = new SimplexNoise();
 
+// Fractionate a value between a range
 function fractionate(val, minVal, maxVal) {
   return (val - minVal) / (maxVal - minVal);
 }
 
+// Modulate a value between a range
 function modulate(val, minVal, maxVal, outMin, outMax) {
   const fr = fractionate(val, minVal, maxVal);
   const delta = outMax - outMin;
   return outMin + fr * delta;
 }
 
+// Average of an array
 function avg(arr) {
   const total = arr.reduce(function (sum, b) {
     return sum + b;
@@ -17,22 +21,27 @@ function avg(arr) {
   return total / arr.length;
 }
 
+// Max value of an array
 function max(arr) {
   return arr.reduce(function (a, b) {
     return Math.max(a, b);
   });
 }
 
+// Init Sphere
 const initSphere = function () {
+  // get audio html element
   const file = document.querySelector("#thefile");
   const audio = document.querySelector("#audio");
   const fileLabel = document.querySelector("label.file");
 
+  // start audio on load
   document.onload = () => {
     audio.play();
     play();
   };
 
+  // start audio on file change
   file.onchange = function () {
     fileLabel.classList.add("normal");
     audio.classList.add("active");
@@ -42,25 +51,9 @@ const initSphere = function () {
     audio.load();
     audio.play();
     play();
-
-    audio.addEventListener("onpause", function () {
-      document.body.style.backgroundColor = "rgb(0, 0, 0)";
-      console.log("pause");
-    });
-
-    audio.addEventListener("onplay", function () {
-      console.log("play");
-      setInterval(() => {
-        const randomColor = `rgb(${Math.floor(
-          Math.random() * 256
-        )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(
-          Math.random() * 256
-        )})`;
-        document.body.style.backgroundColor = randomColor;
-      }, 100);
-    });
   };
 
+  // Play audio, create sphere and create scene
   function play() {
     const context = new AudioContext();
     const src = context.createMediaElementSource(audio);
@@ -87,9 +80,24 @@ const initSphere = function () {
 
     const icosahedronGeometry = new THREE.IcosahedronGeometry(10, 4);
     const lambertMaterial = new THREE.MeshLambertMaterial({
-      color: "rgb(0, 0, 0)",
       wireframe: true,
     });
+
+    let snowflakes = [];
+    for (let i = 0; i < 1000; i++) {
+      let geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+      let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      setInterval(() => {
+        material.color.setHex(Math.random() * 0xffffff);
+        geometry.vertices[0].y = Math.random() * 5;
+      }, 10);
+      let snowflake = new THREE.Mesh(geometry, material);
+      snowflake.position.x = Math.random() * 300 - 45;
+      snowflake.position.y = Math.random() * 300 - 45;
+      snowflake.position.z = Math.random() * 300 - 45;
+      snowflakes.push(snowflake);
+      scene.add(snowflake);
+    }
 
     const ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial);
     ball.position.set(0, 0, 0);
@@ -113,6 +121,7 @@ const initSphere = function () {
 
     render();
 
+    // Render Sphere
     function render() {
       analyser.getByteFrequencyData(dataArray);
 
@@ -145,6 +154,7 @@ const initSphere = function () {
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
+    // Create sphere
     function makeRoughBall(mesh, bassFr, treFr) {
       mesh.geometry.vertices.forEach(function (vertex, i) {
         const offset = mesh.geometry.parameters.radius;
@@ -168,6 +178,7 @@ const initSphere = function () {
       mesh.geometry.normalsNeedUpdate = true;
       mesh.geometry.computeVertexNormals();
       mesh.geometry.computeFaceNormals();
+
       setInterval(() => {
         const randomColor = `rgb(${Math.floor(
           Math.random() * 256
@@ -177,7 +188,18 @@ const initSphere = function () {
         mesh.material.color.set(randomColor);
       }, 2000);
     }
-
+    function animate() {
+      requestAnimationFrame(animate);
+      snowflakes.forEach((snowflake) => {
+        if (snowflake.position.y < -10) {
+          snowflake.position.y = 10;
+        } else {
+          snowflake.position.y -= 0.1;
+        }
+      });
+      renderer.render(scene, camera);
+    }
+    animate();
     audio.play();
   }
 };
