@@ -107,16 +107,6 @@ const initSphere = function (){
 
         const lowerMaxFr = lowerMax / lowerHalfArray.length;
         const upperAvgFr = upperAvg / upperHalfArray.length;
-
-        // ball.geometry.vertices.forEach(function (vertex, i) {
-        //     const offset = mesh.geometry.parameters.radius;
-        //     const amp = 7;
-        //     const time = window.performance.now();
-        //     vertex.normalize();
-        //     const rf = 0.00001;
-        //     const distance = (offset + modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8) ) + noise.noise3D(vertex.x + time *rf*7, vertex.y +  time*rf*8, vertex.z + time*rf*9) * amp * modulate(upperAvgFr, 0, 1, 0, 4);
-        //     vertex.multiplyScalar(distance);
-        // });
         mesh.geometry.verticesNeedUpdate = true;
         mesh.geometry.normalsNeedUpdate = true;
         mesh.geometry.computeVertexNormals();
@@ -127,6 +117,7 @@ const initSphere = function (){
         requestAnimationFrame(render);
         }
 
+        // Responsive Blob
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
