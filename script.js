@@ -81,7 +81,7 @@ const initSphere = function (){
         
         scene.add(group);
 
-        document.querySelector('#out').appendChild(renderer.domElement);
+        document.querySelector('#blob').appendChild(renderer.domElement);
 
         window.addEventListener('resize', onWindowResize, false);
 
