@@ -88,6 +88,12 @@ const initSphere = function (){
         spotLight.lookAt(ball);
         spotLight.castShadow = true;
         scene.add(spotLight);
+
+        composer = new EffectComposer( renderer );
+        composer.addPass( new RenderPass( scene, camera ) );
+
+        glitchPass = new GlitchPass();
+        composer.addPass( glitchPass );
         
         scene.add(group);
 
