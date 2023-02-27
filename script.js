@@ -1,35 +1,44 @@
+// Create noise
 const noise = new SimplexNoise();
 
+// Fractionate a value between a range
 function fractionate(val, minVal, maxVal) {
     return (val - minVal)/(maxVal - minVal);
 }
 
+// Modulate a value between a range
 function modulate(val, minVal, maxVal, outMin, outMax) {
     const fr = fractionate(val, minVal, maxVal);
     const delta = outMax - outMin;
     return outMin + (fr * delta);
 }
 
+// Average of an array
 function avg(arr){
     const total = arr.reduce(function(sum, b) { return sum + b; });
     return (total / arr.length);
 }
 
+// Max value of an array
 function max(arr){
     return arr.reduce(function(a, b){ return Math.max(a, b); })
 }
 
+// Init Sphere
 const initSphere = function (){
   
+    // get audio html element
     const file = document.querySelector("#thefile");
     const audio = document.querySelector("#audio");
     const fileLabel = document.querySelector("label.file");
     
+    // start audio on load
     document.onload = () => {
         audio.play();
         play();
     }
 
+    // start audio on file change
     file.onchange = function(){
         fileLabel.classList.add('normal');
         audio.classList.add('active');
@@ -41,6 +50,7 @@ const initSphere = function (){
         play();
     }
   
+    // Play audio, create sphere and create scene
     function play() {
         const context = new AudioContext();
         const src = context.createMediaElementSource(audio);
@@ -83,35 +93,30 @@ const initSphere = function (){
 
         document.querySelector('#blob').appendChild(renderer.domElement);
 
-        window.addEventListener('resize', onWindowResize, false);
-
         render();
 
+        // Render Sphere
         function render() {
-        analyser.getByteFrequencyData(dataArray);
+            analyser.getByteFrequencyData(dataArray);
 
-        const lowerHalfArray = dataArray.slice(0, (dataArray.length/2) - 1);
-        const upperHalfArray = dataArray.slice((dataArray.length/2) - 1, dataArray.length - 1);
+            const lowerHalfArray = dataArray.slice(0, (dataArray.length/2) - 1);
+            const upperHalfArray = dataArray.slice((dataArray.length/2) - 1, dataArray.length - 1);
 
-        const lowerMax = max(lowerHalfArray);
-        const upperAvg = avg(upperHalfArray);
+            const lowerMax = max(lowerHalfArray);
+            const upperAvg = avg(upperHalfArray);
 
-        const lowerMaxFr = lowerMax / lowerHalfArray.length;
-        const upperAvgFr = upperAvg / upperHalfArray.length;
-        
-        makeRoughBall(ball, modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8), modulate(upperAvgFr, 0, 1, 0, 4));
+            const lowerMaxFr = lowerMax / lowerHalfArray.length;
+            const upperAvgFr = upperAvg / upperHalfArray.length;
+            
+            makeRoughBall(ball, modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8), modulate(upperAvgFr, 0, 1, 0, 4));
 
-        group.rotation.y += 0.005;
-        renderer.render(scene, camera);
-        requestAnimationFrame(render);
+            group.rotation.y += 0.005;
+            renderer.render(scene, camera);
+            requestAnimationFrame(render);
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
 
+        // Create sphere
         function makeRoughBall(mesh, bassFr, treFr) {
             mesh.geometry.vertices.forEach(function (vertex, i) {
                 const offset = mesh.geometry.parameters.radius;
