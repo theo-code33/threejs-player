@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="fr" >
 <head>
   <meta charset="UTF-8">
-  <title>Player Audio - Three.js - Théo et William</title>
+  <title>Blob player - Théo GILLET et William FORT</title>
   <link href="https://fonts.googleapis.com/css?family=Saira" rel="stylesheet"><link rel="stylesheet" href="./style.css">
 
 </head>
@@ -13,9 +13,12 @@
     </label>
 
     <audio id="audio" controls></audio>
-    <div id="out"></div>
+    <div id="blob"></div>
   </div>
-<script type="module" src="./src/app.js"></script>
-
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
+  <script src='https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.3/dat.gui.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.3.0/simplex-noise.min.js'></script>
+  <script  src="./script.js"></script>
 </body>
 </html>

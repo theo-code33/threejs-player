@@ -1,96 +1,127 @@
-:root{
-    --bgColor : hsla(242, 86%, 6%, 1);
-    --bgColorLight : hsla(242, 86%, 24%, 1);
-    --textColor : hsla(242, 86%, 88%, 1);
-    --textColorDark : rgb(81, 255, 0);
-    --paperColor: rgb(125, 120, 255);
-    --paperColorDark: hsla(242, 86%, 34%, 1);
-    --shadowColorFaint: hsla(0, 0%, 0%, 0.2);
-  }
-  
-  /* :selected{
-    color: var(--textColorDark);
-  } */
-  
-  html, body{
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
-    background: var(--bgColor);
-    background: linear-gradient(135deg, var(--bgColor), var(--bgColorLight));
-    color: var(--textColor);
-    font-family: 'Saira', sans-serif;
-    position: relative;
-  }
-  
-  *{
-    box-sizing: border-box;
-    transition: all 0.12s cubic-bezier(0.42, 0.54, 0.22, 1.26);
-  }
-  
-  #canvas {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
-  
-  audio {
-    position: fixed;
-    left: 10px;
-    bottom: -10px;
-    width: calc(100% - 20px);
-  }
-  
-  audio.active{
-    bottom: 10px;
-  }
-  
-  #thefile{
-    width: 0.1px;
-      height: 0.1px;
-      opacity: 0;
-      overflow: hidden;
-      position: absolute;
-      z-index: 1;
-  }
-  
-  label.file{
-    display: inline-block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate3d(-50%, -50%, 0);
-    padding: 1rem 2rem;
-    border-radius: 4px;
-    
-    background: var(--paperColor);
-    color: var(--textColor);
-    font-size: 1.25em;
-    font-weight: 700;
-    box-shadow: 0 20px 60px var(--shadowColorFaint);
-  
-    cursor: pointer;
-  }
-  
-  
-  label.file:hover{
-      background: var(--paperColorDark);
-      transform: translate3d(-50%, -55%, 0);
-  }
-  
-  label.file:active{
-      background: var(--paperColorDark);
-      transform: translate3d(-50%, -45%, 0);
-  }
-  
-  label.file.normal{
-    transform: translate3d(10%, 50%, 0);
-    padding: 0.2rem 2rem;
-    font-size: 1rem;
-    top: 0;
-    left: 0;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgb(54, 54, 54);
+  font-family: "Saira", sans-serif;
+  position: relative;
+}
+
+* {
+  box-sizing: border-box;
+  transition: all 0.12s cubic-bezier(0.42, 0.54, 0.22, 1.26);
+}
+
+#canvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+audio {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translate3d(-50%, 0, 0);
+  width: 20%;
+}
+
+
+audio::-webkit-media-controls {
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  margin: 0;
+  padding: 10px;
+}
+
+audio::-webkit-media-controls-play-button {
+  background-color: #989898;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  height: 25px;
+  width: 25px;
+}
+
+audio::-webkit-media-controls-pause-button {
+  background-color: #e74c3c;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  height: 25px;
+  width: 25px;
+}
+
+audio::-webkit-media-controls-seek-back-button,
+audio::-webkit-media-controls-seek-forward-button {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  height: 25px;
+  width: 25px;
+}
+
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+audio::-webkit-media-controls-volume-slider-container {
+  display: none;
+}
+
+audio.active {
+  bottom: 10px;
+}
+
+#thefile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+}
+
+audio::-webkit-media-controls-timeline {
+  display: none;
+}
+
+label.file {
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-size: 1.25em;
+  font-weight: 700;
+  background-color: #989898;
+  transition: .3s ease-in-out all;
+  cursor: pointer;
+}
+
+label.file:hover {
+  background-color: #e74c3c;
+  transform: translate3d(-50%, -55%, 0);
+}
+
+label.file:active {
+  transform: translate3d(-50%, -45%, 0);
+}
+
+label.file.normal {
+  transform: translate3d(10%, 50%, 0);
+  padding: 0.2rem 2rem;
+  font-size: 1rem;
+  top: 0;
+  left: 0;
+}
