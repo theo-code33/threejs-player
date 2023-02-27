@@ -29,10 +29,11 @@ const initSphere = function (){
         audio.play();
         play();
     }
+
     file.onchange = function(){
         fileLabel.classList.add('normal');
         audio.classList.add('active');
-        var files = this.files;
+        const files = this.files;
         
         audio.src = URL.createObjectURL(files[0]);
         audio.load();
