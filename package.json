@@ -1,0 +1,29 @@
+{
+  "name": "player-threejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theo-code33/threejs-player.git"
+  },
+  "keywords": [],
+  "author": "Théo Gillet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theo-code33/threejs-player/issues"
+  },
+  "homepage": "https://github.com/theo-code33/threejs-player#readme",
+  "dependencies": {
+    "simplex-noise": "^4.0.1",
+    "three": "^0.150.0"
+  },
+  "devDependencies": {
+    "dat.gui": "^0.7.9",
+    "parcel": "^2.8.3"
+  }
+}

@@ -1,3 +1,6 @@
+import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
+import * as THREE from 'three';
+
 const noise = new SimplexNoise();
 
 function fractionate(val, minVal, maxVal) {
@@ -115,20 +118,8 @@ const initSphere = function (){
 
         const lowerMaxFr = lowerMax / lowerHalfArray.length;
         const upperAvgFr = upperAvg / upperHalfArray.length;
-
-        // ball.geometry.vertices.forEach(function (vertex, i) {
-        //     const offset = mesh.geometry.parameters.radius;
-        //     const amp = 7;
-        //     const time = window.performance.now();
-        //     vertex.normalize();
-        //     const rf = 0.00001;
-        //     const distance = (offset + modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8) ) + noise.noise3D(vertex.x + time *rf*7, vertex.y +  time*rf*8, vertex.z + time*rf*9) * amp * modulate(upperAvgFr, 0, 1, 0, 4);
-        //     vertex.multiplyScalar(distance);
-        // });
-        mesh.geometry.verticesNeedUpdate = true;
-        mesh.geometry.normalsNeedUpdate = true;
-        mesh.geometry.computeVertexNormals();
-        mesh.geometry.computeFaceNormals();
+        
+        makeRoughBall(ball, modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8), modulate(upperAvgFr, 0, 1, 0, 4));
 
         group.rotation.y += 0.005;
         renderer.render(scene, camera);
@@ -139,6 +130,22 @@ const initSphere = function (){
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function makeRoughBall(mesh, bassFr, treFr) {
+            mesh.geometry.vertices.forEach(function (vertex, i) {
+                const offset = mesh.geometry.parameters.radius;
+                const amp = 7;
+                const time = window.performance.now();
+                vertex.normalize();
+                const rf = 0.00001;
+                const distance = (offset + bassFr ) + noise.noise3D(vertex.x + time *rf*7, vertex.y +  time*rf*8, vertex.z + time*rf*9) * amp * treFr;
+                vertex.multiplyScalar(distance);
+            });
+            mesh.geometry.verticesNeedUpdate = true;
+            mesh.geometry.normalsNeedUpdate = true;
+            mesh.geometry.computeVertexNormals();
+            mesh.geometry.computeFaceNormals();
         }
 
         audio.play();

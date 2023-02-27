@@ -1,0 +1,91 @@
+:root {
+  --bgColor: #03021c;
+  --bgColorLight: #0c0972;
+  --textColor: #c8c6fb;
+  --textColorDark: #51ff00;
+  --paperColor: #7d78ff;
+  --paperColorDark: #110ca1;
+  --shadowColorFaint: #0003;
+}
+
+html, body {
+  height: 100vh;
+  width: 100vw;
+  background: var(--bgColor);
+  background: linear-gradient(135deg, var(--bgColor), var(--bgColorLight));
+  color: var(--textColor);
+  margin: 0;
+  padding: 0;
+  font-family: Saira, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  transition: all .12s cubic-bezier(.42, .54, .22, 1.26);
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+audio {
+  width: calc(100% - 20px);
+  position: fixed;
+  bottom: -10px;
+  left: 10px;
+}
+
+audio.active {
+  bottom: 10px;
+}
+
+#thefile {
+  width: .1px;
+  height: .1px;
+  opacity: 0;
+  z-index: 1;
+  position: absolute;
+  overflow: hidden;
+}
+
+label.file {
+  background: var(--paperColor);
+  color: var(--textColor);
+  box-shadow: 0 20px 60px var(--shadowColorFaint);
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  font-size: 1.25em;
+  font-weight: 700;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+label.file:hover {
+  background: var(--paperColorDark);
+  transform: translate3d(-50%, -55%, 0);
+}
+
+label.file:active {
+  background: var(--paperColorDark);
+  transform: translate3d(-50%, -45%, 0);
+}
+
+label.file.normal {
+  padding: .2rem 2rem;
+  font-size: 1rem;
+  top: 0;
+  left: 0;
+  transform: translate3d(10%, 50%, 0);
+}
+
+/*# sourceMappingURL=index.3a01df49.css.map */
